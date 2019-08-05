@@ -15,16 +15,16 @@ info:
   license: 
     name: "MIT"
 paths:
-  '/asset/group/upsert':
+  '/rules/upsert':
     post:
       tags:
-        - Create / Update Asset Group
-      summary: Create / Update Asset Group
-      operationId: upsertAssetGroup
+        - Upsert Message Rule
+      summary: Create / Update Message Rule
+      operationId: upsertMessageRule
       consumes:
         - "application/json"
       produces:
-        - application/json
+        - "application/json"
       parameters:
         - name: atoken
           in: query
@@ -33,10 +33,10 @@ paths:
           type: string
         - name: entity
           in: body
-          description: AssetGroup JSON object
+          description: MessageRule JSON object
           required: true
           schema:
-            $ref: '#/definitions/AssetGroup'
+            $ref: '#/definitions/MessageRule'
       responses:
         '200':
           description: successful operation
@@ -46,25 +46,20 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/asset/group/get/{oaid}/{gid}':
+  '/rules/get/{specId}':
     get:
       tags:
-        - Retreive Asset Group
-      summary: Retreive Asset Group
-      operationId: getAssetGroup
+        - Get Message Rule
+      summary: Retreive Message Rule
+      operationId: getMessageRule
       consumes:
         - "application/json"
       produces:
-        - application/json
+        - "application/json"
       parameters:
-        - name: oaid
+        - name: specId
           in: path
-          description: Owner Asset ID
-          required: true
-          type: string
-        - name: gid
-          in: path
-          description: Group ID
+          description: Message Specification ID
           required: true
           type: string
         - name: atoken
@@ -81,21 +76,111 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/AssetGroup'
+            $ref: '#/definitions/MessageRule'
         "417":
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/asset/group/count':
-    post:
+  '/rules/delete/{specId}':
+    delete:
       tags:
-        - Count All Asset Groups
-      summary: Count All Asset Groups
-      operationId: countAllAssetGroups
+        - Delete Message Rule
+      summary: Delete Message Rule
+      operationId: deleteMessageRule
       consumes:
         - "application/json"
       produces:
-        - application/json
+        - "application/json"
+      parameters:
+        - name: specId
+          in: path
+          description: Message Specification ID
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rules/delete/all':
+    delete:
+      tags:
+        - Delete All Message Rules
+      summary: Delete All Message Rules
+      operationId: deleteAllMessageRules
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rules/count/all':
+    get:
+      tags:
+        - Count All Message Rules
+      summary: Count All Message Rules
+      operationId: countAllMessageRules
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in admin user
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rules/count':
+    get:
+      tags:
+        - Count Message Rules
+      summary: Count Message Rules
+      operationId: countMessageRules
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
       parameters:
         - name: atoken
           in: query
@@ -116,127 +201,77 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/asset/group/remove':
-    delete:
-      tags:
-        - Delete All Asset Groups
-      summary: Delete All Asset Groups
-      operationId: deleteAllAssetGroups
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in admin user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Domain Key, optional
-          required: false
-          type: string
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Success'
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/asset/group/remove/{oaid}':
-    delete:
-      tags:
-        - Delete Asset Groups
-      summary: Delete Asset Groups
-      operationId: deleteAssetGroups
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: oaid
-          in: path
-          description: Owner Asset ID
-          required: true
-          type: string
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Domain Key, optional
-          required: false
-          type: string
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Success'
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/asset/group/remove/{oaid}/{gid}':
-    delete:
-      tags:
-        - Delete Asset Group
-      summary: Delete Asset Group
-      operationId: deleteAssetGroup
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: oaid
-          in: path
-          description: Owner Asset ID
-          required: true
-          type: string
-        - name: gid
-          in: path
-          description: Group ID
-          required: true
-          type: string
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Domain Key, optional
-          required: false
-          type: string
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Success'
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/asset/group/list/{oaid}':
+  '/rules/list':
     get:
       tags:
-        - List Asset Groups
-      summary: List Asset Groups
-      operationId: listAssetGroups
+        - List Message Rules
+      summary: List Message Rules
+      operationId: listMessageRules
       consumes:
         - "application/json"
       produces:
-        - application/json
+        - "application/json"
       parameters:
-        - name: oaid
-          in: path
-          description: Owner Asset ID
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
           required: true
           type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: load
+          in: query
+          description: load the source code, by default yes
+          required: false
+          type: boolean
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of rules to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: next
+          in: query
+          description: If next is true, **specId** is required
+          required: false
+          type: boolean
+        - name: specId
+          in: query
+          description: >-
+            type value of the previous list operation, **required** if **next** is specified
+          required: false
+          type: string      
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MessageRule'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rules/list/specs':
+    get:
+      tags:
+        - List Named Rule Specs
+      summary: List Named Rule Specs
+      operationId: listNamedRuleSpecs
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
         - name: atoken
           in: query
           description: Auth token of the logged in user
@@ -255,42 +290,53 @@ paths:
           format: int32
         - name: pageSize
           in: query
-          description: Maximum number of assets to be listed
+          description: Maximum number of rules to be listed
           required: false
           type: integer
           format: int32
         - name: next
           in: query
-          description: If next is true, **eid** is required
+          description: If next is true, **specId** is required
           required: false
           type: boolean
-        - name: gid
+        - name: specId
           in: query
-          description: Last Group Id of the previous list operation, **required** if **next** is true
+          description: >-
+            message spec id of the previous list operation, **required** if **next** is specified
           required: false
-          type: string
+          type: string      
       responses:
         '200':
           description: successful operation
           schema:
             type: array
             items:
-              $ref: '#/definitions/AssetGroup'
+              type: string
         "417":
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/asset/group/search':
-    post:
+  '/rules/invoke/{specId}/{messageId}':
+    get:
       tags:
-        - Search Asset Groups
-      summary: Search Asset Groups
-      operationId: searchAssetGroups
+        - Invoke a Message Rule
+      summary: Invoke a Message Rule
+      operationId: invokeMessageRule
       consumes:
         - "application/json"
       produces:
-        - application/json
+        - "application/json"
       parameters:
+        - name: specId
+          in: path
+          description: Message Specification ID
+          required: true
+          type: string
+        - name: messageId
+          in: path
+          description: Message ID
+          required: true
+          type: string
         - name: atoken
           in: query
           description: Auth token of the logged in user
@@ -301,12 +347,47 @@ paths:
           description: Domain Key, optional
           required: false
           type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rules/search':
+    post:
+      tags:
+        - Search Message Rules
+      summary: Search Message Rules
+      operationId: searchMessageRules
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: load
+          in: query
+          description: load the source code, by default yes
+          required: false
+          type: boolean
         - name: pageSize
           in: query
           description: Maximum number of objects to be listed
           required: false
           type: integer
           format: int32
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
         - name: query
           in: body
           description: Search string
@@ -319,7 +400,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/AssetGroup'
+              $ref: '#/definitions/MessageRule'
         "417":
           description: "API Error"
           schema: 
@@ -334,34 +415,6 @@ definitions:
         type: "string"
       message: 
         type: "string"
-  AssetGroup:
-    type: object
-    required:
-      - ownerAssetId
-      - groupId
-    properties:
-      ownerAssetId:
-        type: string
-      groupId:
-        type: string
-      domainKey:
-        type: string
-      name:
-        type: string
-      description:
-        type: string
-      groupEmail:
-        type: string
-      groupPhone:
-        type: string
-      createdStamp:
-        type: integer
-        format: int64
-      individualBroadcast:
-        type: boolean
-      updatedStamp:
-        type: integer
-        format: int64
   Count:
     type: object
     required:
@@ -370,32 +423,51 @@ definitions:
       total:
         type: integer
         format: int64
-  DomainObject:
+  MessageRule:
+    allOf:
+    - $ref: '#/definitions/Rule'
+    - type: object
+      required:
+       - 'messageId'
+      properties:
+        messageId:
+          type: string
+  Rule:
     type: object
-    discriminator: domainObjectType
+    discriminator: ruleType
+    required:
+    - lang
+    - code
     properties:
       domainKey:
         type: string
-  Property:
-    allOf:
-    - $ref: '#/definitions/SystemProperty'
-    - $ref: '#/definitions/DomainObject'
-    - type: object
-      discriminator: propertyType
-  Storable:
-    type: object
-    discriminator: storableType
-    properties:
-      dataFormat:
+      language:
         type: string
-        description: Required if **dataType** is **blob**
         enum:
-          - AS_IS
-          - JSON
-          - HEX
-          - BASE64
+          - GROOVY
+          - JAVA_SCRIPT
+          - NODE_JS
+      code:
+        type: string
+      compilable:
+        type: boolean
       description:
         type: string
+      contexts:
+        type: array
+        items:
+          type: string
+      plugins:
+        type: array
+        items:
+          type: string
+      createdStamp:
+        type: integer
+        format: int64
+      updatedStamp:
+        type: integer
+        format: int64
+        
   Success: 
     type: "object"
     required:
@@ -405,19 +477,3 @@ definitions:
         type: "string"
       message: 
         type: "string"
-  SystemProperty:
-    allOf:
-    - $ref: '#/definitions/Storable'
-    - type: object
-      discriminator: systemPropertyType
-      properties:
-        name:
-          type: string
-        value:
-          type: string
-        createdStamp:
-          type: integer
-          format: int64
-        updatedStamp:
-          type: integer
-          format: int64
