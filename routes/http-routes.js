@@ -58,10 +58,16 @@ Routes.prototype.init = function () {
         res.render('home.html', {layout: '', boodskap:self.app.boodskap});
     });
 
+    self.app.get('/message-definition', sessionCheck, function (req, res) {
+        res.render('message-definition.html', {layout: '', boodskap:self.app.boodskap});
+    });
+
 
     self.app.get('/documentation', sessionCheck, function (req, res) {
         res.render('documentation.html', {layout: '', boodskap:self.app.boodskap});
     });
+
+
 
 
 };

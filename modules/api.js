@@ -18,7 +18,8 @@ Api.prototype.init = function () {
     const self = this;
 
     var options = {
-        customCss: '.swagger-ui .topbar { display: none } .models,.information-container {display: none !important}',
+        customCss: '::-webkit-scrollbar { display: none;} body{background-color:#fff} ' +
+            '.swagger-ui .topbar { display: none } .models,.information-container {display: none !important}',
         customJs: '/swagger.js'
 
     };
