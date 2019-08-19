@@ -53,14 +53,14 @@ paths:
           description: Message ID (defined through message spec)
           required: true
           type: string
-        - name: dkey
+        - name: key
           in: query
           description: Domain key
           required: true
           type: string
-        - name: akey
+        - name: api
           in: query
-          description: API key
+          description: API key or Device password
           required: true
           type: string
         - name: did
@@ -80,10 +80,10 @@ paths:
           type: string
         - name: data
           in: body
-          description: Command text
+          description: Message payload JSON object
           required: true
           schema:
-            type: string
+            type: object
       responses:
         '200':
           description: successful operation
@@ -267,7 +267,7 @@ definitions:
       header:
         $ref: '#/definitions/MessageHeader'
       data:
-        type: string
+        type: object
         description: message payload JSON object
     required:
       - header
