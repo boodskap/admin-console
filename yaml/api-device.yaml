@@ -1112,10 +1112,59 @@ paths:
           description: Auth token of the logged in user
           required: true
           type: string
-        - name: targetDeviceId
+        - name: dkey
           in: query
-          description: Device ID, optional, filter only for this device
+          description: Domain Key, optional
           required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of devices to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: next
+          in: query
+          description: If next is true, **requestId** is required
+          required: false
+          type: boolean
+        - name: requestId
+          in: query
+          description: Last Request ID of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SentCommandStatus'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/device/command/sent/status/list':
+    get:
+      tags:
+        - List Command Sent Status
+      summary: List Command Sent Status
+      operationId: listCommandSentStatus
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
           type: string
         - name: dkey
           in: query
@@ -1136,14 +1185,20 @@ paths:
           format: int32
         - name: next
           in: query
-          description: If next is true, **deviceId** is required
+          description: If next is true, **deviceId**, **corrId** are required
           required: false
           type: boolean
         - name: deviceId
           in: query
-          description: Last Device Id of the previous list operation, **required** if **next** is true
           required: false
+          description: Last Request ID of the previous list operation, **required** if **next** is true
           type: string
+        - name: corrId
+          in: query
+          description: Last Corr ID of the previous list operation, **required** if **next** is true
+          required: false
+          type: integer
+          format: int64
       responses:
         '200':
           description: successful operation
@@ -1482,9 +1537,14 @@ definitions:
     type: object
     discriminator: broadcastRawCommandType
     required:
+    - deviceModel
     - data
     - format
     properties:
+      deviceModel:
+        type: string
+      deviceVersion:
+        type: string
       data:
         type: string
       format:
@@ -1786,6 +1846,9 @@ definitions:
          - TEXT
       deviceId:
         type: string
+      commandId:
+        type: integer
+        format: int32
       groupId:
         type: string
       templateId:
@@ -1874,11 +1937,14 @@ definitions:
           format: int64
   TemplateBroadcastCommand:
     required:
-      - command
+      - deviceModel
       - templateId
+      - mergeContent
     properties:
-      command:
-        $ref: "#/definitions/BroadcastCommand"
+      deviceModel:
+        type: string
+      deviceVersion:
+        type: string
       templateId:
         type: string
       system:

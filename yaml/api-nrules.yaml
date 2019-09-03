@@ -430,6 +430,8 @@ definitions:
     - type: object
       required:
        - 'name'
+       - 'language'
+       - 'code'
       properties:
         name:
           type: string
@@ -437,7 +439,7 @@ definitions:
     type: object
     discriminator: ruleType
     required:
-    - lang
+    - language
     - code
     properties:
       domainKey:
