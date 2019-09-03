@@ -422,7 +422,7 @@ definitions:
     type: object
     discriminator: ruleType
     required:
-    - lang
+    - language
     - code
     properties:
       domainKey:
@@ -461,6 +461,8 @@ definitions:
       required:
        - 'ruleId'
        - 'pattern'
+       - 'language'
+       - 'code'
       properties:
         ruleId:
           type: string

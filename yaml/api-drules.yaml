@@ -188,11 +188,14 @@ definitions:
     allOf:
     - $ref: '#/definitions/Rule'
     - type: object
+      required:
+       - 'language'
+       - 'code'
   Rule:
     type: object
     discriminator: ruleType
     required:
-    - lang
+    - language
     - code
     properties:
       domainKey:
