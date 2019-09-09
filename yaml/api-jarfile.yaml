@@ -1,0 +1,112 @@
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/jarfile/upload':
+    post:
+      tags:
+        - Upload Java Archive File
+      summary: Upload Java Archive File
+      operationId: uploadJavaArchiveFile
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: loader
+          in: query
+          description: Optional class loader id
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Global script visible to all domains (admin access)
+          required: false
+          type: boolean
+        - name: archive
+          in: formData
+          description: Java archive file
+          type: file
+          required: true
+      responses:
+        '200':
+          description: Count of extracted Java classes
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  Count:
+    type: object
+    required:
+      - total
+    properties:
+      total:
+        type: integer
+        format: int64
+  JarFile:
+    type: object
+    discriminator: jarFileType
+    properties:
+      fileName:
+        type: string
+      loader:
+        type: string
+        
+  JavaClass:
+    type: object
+    discriminator: javaClassType
+    required:
+    - pkg
+    - name
+    properties:
+      pkg:
+        type: string
+      name:
+        type: string
+      loader:
+        type: string
+        
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
