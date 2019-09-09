@@ -1,0 +1,376 @@
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/jar/upload/file':
+    post:
+      tags:
+        - Upload Jar File
+      summary: Upload Jar File
+      operationId: uploadJarFile
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain key (admin access)
+          required: false
+          type: string
+        - name: loader
+          in: query
+          description: Optional class loader id
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Global script visible to all domains (admin access)
+          required: false
+          type: boolean
+        - name: jarfile
+          in: formData
+          description: Java archive file
+          type: file
+          required: true
+      responses:
+        '200':
+          description: successful operation, number of classes added from the archive
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/jar/delete/file/{loader}/{name}':
+    delete:
+      tags:
+        - Delete Jar File
+      summary: Delete Jar File
+      operationId: deleteJarFile
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: loader
+          in: path
+          description: Class loader id
+          required: true
+          type: string
+        - name: name
+          in: path
+          description: File name
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain key (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global jar (admin access)
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/jar/delete/loader/{loader}':
+    delete:
+      tags:
+        - Delete Jar Loader
+      summary: Delete Jar Loader
+      operationId: deleteJarLoader
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: loader
+          in: path
+          description: Class loader id
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain key (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global jar (admin access)
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/jar/list/{loader}':
+    get:
+      tags:
+        - List Jar Files
+      summary: List Jar Files
+      operationId: listJarFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Class Loader ID
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next is true, **loader, pkg and name** are required
+          required: false
+          type: boolean
+        - name: name
+          in: query
+          description: Last class name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JarFile'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/jar/search/{loader}':
+    post:
+      tags:
+        - Search Jar Files
+      summary: Search Jar Files
+      operationId: searchJarFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Class Loader ID
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: pageSize
+          in: query
+          description: Maximum number of objects to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system jar files
+          required: false
+          type: boolean
+        - name: query
+          in: body
+          description: Search string
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JarFile'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/jar/count/{loader}':
+    post:
+      tags:
+        - Count Loader Jar Files
+      summary: Count Loader Jar Files
+      operationId: countLoaderJarFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global jars
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/jar/count':
+    post:
+      tags:
+        - Count All Jar Files
+      summary: Count All Jar Files
+      operationId: countAllJarFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global jars
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  Count:
+    type: object
+    required:
+      - total
+    properties:
+      total:
+        type: integer
+        format: int64
+  JarFile:
+    type: object
+    discriminator: jarFileType
+    properties:
+      fileName:
+        type: string
+      loader:
+        type: string
+        
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"

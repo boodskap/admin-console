@@ -1,0 +1,351 @@
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/java/list/{loader}/{fileName}':
+    get:
+      tags:
+        - List Java Classes
+      summary: List Java Classes
+      operationId: listJavaClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: fileName
+          in: path
+          description: Filter by jar file
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next is true, **loader, pkg is required
+          required: false
+          type: boolean
+        - name: pkg
+          in: query
+          description: Last pkg name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: Last class name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JavaClass'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/java/search':
+    post:
+      tags:
+        - Search Java Classes
+      summary: Search Java Classes
+      operationId: searchJavaClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: pageSize
+          in: query
+          description: Maximum number of objects to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: query
+          in: body
+          description: Search string
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JavaClass'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/java/count':
+    post:
+      tags:
+        - Count All Java Classes
+      summary: Count All Java Classes
+      operationId: countAllJavaClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global loader classes
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/java/count/{loader}':
+    post:
+      tags:
+        - Count Loader Java Classes
+      summary: Count Loader Java Classes
+      operationId: countLoaderJavaClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global loader classes
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/java/count/{loader}/{name}':
+    get:
+      tags:
+        - Count Jar Java Classes
+      summary: Count Jar Java Classes
+      operationId: countJarJavaClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: name
+          in: path
+          description: Filter by jar file
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global loader classes
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/java/count/{loader}/{name}/{pkg}':
+    get:
+      tags:
+        - Count Jar Package Java Classes
+      summary: Count Jar Package Java Classes
+      operationId: countJarPackageJavaClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: name
+          in: path
+          description: Filter by jar file
+          required: true
+          type: string
+        - name: pkg
+          in: path
+          description: Filter by package
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global loader classes
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  Count:
+    type: object
+    required:
+      - total
+    properties:
+      total:
+        type: integer
+        format: int64
+  JavaClass:
+    type: object
+    discriminator: javaClassType
+    required:
+    - pkg
+    - name
+    properties:
+      pkg:
+        type: string
+      name:
+        type: string
+      loader:
+        type: string
+        
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
