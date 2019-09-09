@@ -33,7 +33,7 @@ paths:
           type: string
         - name: dkey
           in: query
-          description: Another domain key (admin access)
+          description: Another domain Key, optional (admin access)
           required: false
           type: string
         - name: loader
@@ -48,7 +48,7 @@ paths:
           type: boolean
         - name: jarfile
           in: formData
-          description: Java archive file
+          description: Java archive (jar) file
           type: file
           required: true
       responses:
