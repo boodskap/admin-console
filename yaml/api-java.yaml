@@ -139,7 +139,7 @@ paths:
           schema: 
             $ref: "#/definitions/ApiError"
   '/java/count':
-    post:
+    get:
       tags:
         - Count All Java Classes
       summary: Count All Java Classes
@@ -174,7 +174,7 @@ paths:
           schema: 
             $ref: "#/definitions/ApiError"
   '/java/count/{loader}':
-    post:
+    get:
       tags:
         - Count Loader Java Classes
       summary: Count Loader Java Classes
