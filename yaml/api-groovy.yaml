@@ -15,7 +15,7 @@ info:
   license: 
     name: "MIT"
 paths:
-  '/groovy/compile/script':
+  '/groovy/script/compile':
     post:
       tags:
         - Compile Groovy Script
@@ -63,7 +63,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/compile/file':
+  '/groovy/file/compile':
     post:
       tags:
         - Compile Groovy File
@@ -110,7 +110,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/upload/content':
+  '/groovy/content/upload':
     post:
       tags:
         - Upload Groovy Script
@@ -163,7 +163,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/upload/file':
+  '/groovy/file/upload':
     post:
       tags:
         - Upload Groovy Script File
@@ -215,7 +215,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/upload/library':
+  '/groovy/library/upload':
     post:
       tags:
         - Upload Groovy Library File
@@ -260,7 +260,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/delete/script/{loader}/{pkg}/{name}':
+  '/groovy/script/delete/{loader}/{pkg}/{name}':
     delete:
       tags:
         - Delete Groovy Script
@@ -310,7 +310,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/delete/pkg/{loader}/{pkg}':
+  '/groovy/pkt/delete/{loader}/{pkg}':
     delete:
       tags:
         - Delete Groovy Package
@@ -355,7 +355,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/delete/loader/{loader}':
+  '/groovy/loader/delete/{loader}':
     delete:
       tags:
         - Delete Groovy Loader
@@ -513,7 +513,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/count/{loader}/{pkg}':
+  '/groovy/loader/pkg/count/{loader}/{pkg}':
     get:
       tags:
         - Count Groovy Classes
@@ -558,7 +558,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/count/{loader}':
+  '/groovy/loader/count/{loader}':
     post:
       tags:
         - Count Groovy Loader Classes

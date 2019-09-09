@@ -15,7 +15,7 @@ info:
   license: 
     name: "MIT"
 paths:
-  '/jar/upload/file':
+  '/jar/file/upoad':
     post:
       tags:
         - Upload Jar File
@@ -60,7 +60,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/jar/delete/file/{loader}/{name}':
+  '/jar/file/delete/{loader}/{name}':
     delete:
       tags:
         - Delete Jar File
@@ -105,7 +105,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/jar/delete/loader/{loader}':
+  '/jar/loader/delete/{loader}':
     delete:
       tags:
         - Delete Jar Loader
@@ -145,7 +145,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/jar/list/{loader}':
+  '/jar/loader/list/{loader}':
     get:
       tags:
         - List Jar Files
@@ -209,7 +209,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/jar/search/{loader}':
+  '/jar/loader/search/{loader}':
     post:
       tags:
         - Search Jar Files
@@ -263,7 +263,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/jar/count/{loader}':
+  '/jar/loader/count/{loader}':
     post:
       tags:
         - Count Loader Jar Files

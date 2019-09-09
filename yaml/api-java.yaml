@@ -213,7 +213,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/java/count/{loader}/{name}':
+  '/java/count/{loader}/{fileName}':
     get:
       tags:
         - Count Jar Java Classes
@@ -229,7 +229,7 @@ paths:
           description: Filter by loader id
           required: true
           type: string
-        - name: name
+        - name: fileName
           in: path
           description: Filter by jar file
           required: true
@@ -258,7 +258,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/java/count/{loader}/{name}/{pkg}':
+  '/java/count/{loader}/{fileName}/{pkg}':
     get:
       tags:
         - Count Jar Package Java Classes
@@ -274,7 +274,7 @@ paths:
           description: Filter by loader id
           required: true
           type: string
-        - name: name
+        - name: fileName
           in: path
           description: Filter by jar file
           required: true
