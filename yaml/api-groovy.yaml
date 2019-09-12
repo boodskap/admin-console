@@ -215,71 +215,21 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/library/upload':
-    post:
+  '/groovy/file/get/{loader}/{pkg}/{name}':
+    get:
       tags:
-        - Upload Groovy Library File
-      summary: Upload Groovy Library File
-      operationId: uploadGroovyLibraryFile
+        - Get Groovy Script File
+      summary: Get Groovy Script File
+      operationId: getGroovyScriptFile
       consumes:
-        - multipart/form-data
+        - application/json
       produces:
         - application/json
-      parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Another domain Key, optional (admin access)
-          required: false
-          type: string
-        - name: loader
-          in: query
-          description: Optional class loader id
-          required: false
-          type: string
-        - name: global
-          in: query
-          description: Global script visible to all domains (admin access)
-          required: false
-          type: boolean
-        - name: library
-          in: formData
-          description: Groovy library (zip) file
-          type: file
-          required: true
-      responses:
-        '200':
-          description: successful operation, number of classes added from the archive
-          schema: 
-            $ref: "#/definitions/Count"
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/groovy/script/delete/{loader}/{pkg}/{name}':
-    delete:
-      tags:
-        - Delete Groovy Script
-      summary: Delete Groovy Script
-      operationId: deleteGroovyScript
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
       parameters:
         - name: loader
           in: path
           description: Class loader id
           required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Another domain Key, optional (admin access)
-          required: false
           type: string
         - name: pkg
           in: path
@@ -296,6 +246,61 @@ paths:
           description: Auth token of the logged in user
           required: true
           type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global script (admin access)
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/GroovyClass"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/groovy/file/delete/{loader}/{pkg}/{name}':
+    delete:
+      tags:
+        - Delete Groovy Script File
+      summary: Delete Groovy Script File
+      operationId: deleteGroovyScriptFile
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: loader
+          in: path
+          description: Class loader id
+          required: true
+          type: string
+        - name: pkg
+          in: path
+          description: Package name
+          required: true
+          type: string
+        - name: name
+          in: path
+          description: Class Name
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
         - name: global
           in: query
           description: Is global script (admin access)
@@ -310,26 +315,21 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/groovy/pkt/delete/{loader}/{pkg}':
+  '/groovy/file/delete/{loader}/{pkg}':
     delete:
       tags:
         - Delete Groovy Package
       summary: Delete Groovy Package
       operationId: deleteGroovyPackage
       consumes:
-        - "application/json"
+        - application/json
       produces:
-        - "application/json"
+        - application/json
       parameters:
         - name: loader
           in: path
           description: Class loader id
           required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Another domain Key, optional (admin access)
-          required: false
           type: string
         - name: pkg
           in: path
@@ -341,45 +341,10 @@ paths:
           description: Auth token of the logged in user
           required: true
           type: string
-        - name: global
-          in: query
-          description: Is global script (admin access)
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: successful operation
-          schema: 
-            $ref: "#/definitions/Success"
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/groovy/loader/delete/{loader}':
-    delete:
-      tags:
-        - Delete Groovy Loader
-      summary: Delete Groovy Loader
-      operationId: deleteGroovyLoader
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - name: loader
-          in: path
-          description: Class loader id
-          required: true
-          type: string
         - name: dkey
           in: query
           description: Another domain Key, optional (admin access)
           required: false
-          type: string
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
           type: string
         - name: global
           in: query
@@ -391,244 +356,6 @@ paths:
           description: successful operation
           schema: 
             $ref: "#/definitions/Success"
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/groovy/list':
-    get:
-      tags:
-        - List Groovy Classes
-      summary: List Groovy Classes
-      operationId: listGroovyClasses
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Domain Key, optional
-          required: false
-          type: string
-        - name: page
-          in: query
-          description: Page index, starts from 0
-          required: false
-          type: integer
-          format: int32
-        - name: pageSize
-          in: query
-          description: Maximum number of assets to be listed
-          required: false
-          type: integer
-          format: int32
-        - name: global
-          in: query
-          description: True for system groovy classes
-          required: false
-          type: boolean
-        - name: next
-          in: query
-          description: If next is true, **loader, pkg and name** are required
-          required: false
-          type: boolean
-        - name: loader
-          in: query
-          description: Last loader name of the previous list operation, **required** if **next** is true
-          required: false
-          type: string
-        - name: pkg
-          in: query
-          description: Last pkg name of the previous list operation, **required** if **next** is true
-          required: false
-          type: string
-        - name: name
-          in: query
-          description: Last class name of the previous list operation, **required** if **next** is true
-          required: false
-          type: string
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/GroovyClass'
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/groovy/search':
-    post:
-      tags:
-        - Search Groovy Classes
-      summary: Search Groovy Classes
-      operationId: searchGroovyClasses
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Domain Key, optional
-          required: false
-          type: string
-        - name: pageSize
-          in: query
-          description: Maximum number of objects to be listed
-          required: false
-          type: integer
-          format: int32
-        - name: global
-          in: query
-          description: True for system groovy classes
-          required: false
-          type: boolean
-        - name: query
-          in: body
-          description: Search string
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/GroovyClass'
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/groovy/loader/pkg/count/{loader}/{pkg}':
-    get:
-      tags:
-        - Count Groovy Classes
-      summary: Count Groovy Classes
-      operationId: countGroovyClasses
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: loader
-          in: path
-          description: Filter by loader id
-          required: true
-          type: string
-        - name: pkg
-          in: path
-          description: Filter by package
-          required: true
-          type: string
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Another domain Key, optional (admin access)
-          required: false
-          type: string
-        - name: global
-          in: query
-          description: Is global loader scripts
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: successful operation
-          schema: 
-            $ref: "#/definitions/Count"
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/groovy/loader/count/{loader}':
-    post:
-      tags:
-        - Count Groovy Loader Classes
-      summary: Count Groovy Loader Classes
-      operationId: countGroovyLoaderClasses
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: loader
-          in: path
-          description: Filter by loader id
-          required: true
-          type: string
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Another domain Key, optional (admin access)
-          required: false
-          type: string
-        - name: global
-          in: query
-          description: Is global loader scripts
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: successful operation
-          schema: 
-            $ref: "#/definitions/Count"
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/groovy/count':
-    post:
-      tags:
-        - Count All Groovy Classes
-      summary: Count All Groovy Classes
-      operationId: countAllGroovyClasses
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Another domain Key, optional (admin access)
-          required: false
-          type: string
-        - name: global
-          in: query
-          description: Is global loader scripts
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: successful operation
-          schema: 
-            $ref: "#/definitions/Count"
         "417":
           description: "API Error"
           schema: 

@@ -330,6 +330,16 @@ paths:
           description: Domain Key, optional
           required: false
           type: string
+        - name: name
+          in: query
+          description: Display name, optional
+          required: false
+          type: string
+        - name: description
+          in: query
+          description: Short description, optional
+          required: false
+          type: string
       responses:
         '200':
           description: successful operation
@@ -462,6 +472,11 @@ paths:
         - name: dkey
           in: query
           description: Domain Key, optional
+          required: false
+          type: string
+        - name: description
+          in: query
+          description: Short description, optional
           required: false
           type: string
         - name: entity

@@ -1,0 +1,694 @@
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/archive/{type}/upoad':
+    post:
+      tags:
+        - Upload Archive File
+      summary: Upload Archive File
+      operationId: uploadArchiveFile
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: loader
+          in: query
+          description: Optional class loader id
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Global jars visible to all domains (admin access)
+          required: false
+          type: boolean
+        - name: archive
+          in: formData
+          description: Jar/Zip file
+          type: file
+          required: true
+      responses:
+        '200':
+          description: successful operation, number of classes added from the archive
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/delete/{loader}/{fileName}':
+    delete:
+      tags:
+        - Delete Archive File
+      summary: Delete Archive File
+      operationId: deleteArchiveFile
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Class loader id
+          required: true
+          type: string
+        - name: fileName
+          in: path
+          description: File name
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain key (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global jar (admin access)
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/list':
+    get:
+      tags:
+        - List Archive Files
+      summary: List Archive Files
+      operationId: listArchiveFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: loader
+          in: query
+          description: Class Loader ID
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system jar files
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next is true, **loader, pkg and fileName** are required
+          required: false
+          type: boolean
+        - name: fileName
+          in: query
+          description: Last File Name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ArchiveFile'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/search':
+    post:
+      tags:
+        - Search Archive Files
+      summary: Search Archive Files
+      operationId: searchArchiveFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: loader
+          in: query
+          description: Class Loader ID
+          required: false
+          type: string
+        - name: pageSize
+          in: query
+          description: Maximum number of objects to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system jar files
+          required: false
+          type: boolean
+        - name: query
+          in: body
+          description: Search string
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ArchiveFile'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/count':
+    post:
+      tags:
+        - Count Archive Files
+      summary: Count Archive Files
+      operationId: countArchiveFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: loader
+          in: query
+          description: Filter by loader id
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/count/all':
+    post:
+      tags:
+        - Count All Archive Files
+      summary: Count All Archive Files
+      operationId: countAllArchiveFiles
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: global
+          in: query
+          description: Is global jars
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/pkg/list/{loader}/{fileName}':
+    get:
+      tags:
+        - List Archive Packages
+      summary: List Archive Packages
+      operationId: listArchivePackages
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: fileName
+          in: path
+          description: File name
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next page
+          required: false
+          type: boolean
+        - name: pkg
+          in: query
+          description: Last pkg name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              type: string
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/class/list/{loader}/{fileName}':
+    get:
+      tags:
+        - List Archive Classes
+      summary: List Archive Classes
+      operationId: listArchiveClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: fileName
+          in: path
+          description: Filter by archive file
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next page
+          required: false
+          type: boolean
+        - name: pkg
+          in: query
+          description: Last package name of the previous list operation, **required** if **next** is true of
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: Last class name of the previous list operation, **required** if **next** is true of 
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JavaClass'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/class/list/{loader}/{fileName}/{pkg}':
+    get:
+      tags:
+        - List Archive Package Classes
+      summary: List Archive Package Classes
+      operationId: listArchivePackageClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: fileName
+          in: path
+          description: Filter by archive file
+          required: true
+          type: string
+        - name: pkg
+          in: path
+          description: Filter by package name
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next page
+          required: false
+          type: boolean
+        - name: name
+          in: query
+          description: Last class name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JavaClass'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/class/count/{loader}/{fileName}':
+    get:
+      tags:
+        - Count Archive Classes
+      summary: Count Archive Classes
+      operationId: countArchiveClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: fileName
+          in: path
+          description: Filter by archive file
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global loader classes
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/archive/{type}/class/count/{loader}/{fileName}/{pkg}':
+    get:
+      tags:
+        - Count Archive Package Classes
+      summary: Count Archive Package Classes
+      operationId: countArchivePackageClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: fileName
+          in: path
+          description: Filter by archive file
+          required: true
+          type: string
+        - name: pkg
+          in: path
+          description: Filter by package
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global loader classes
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+            
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  ArchiveFile:
+    type: object
+    discriminator: archiveFileType
+    properties:
+      fileName:
+        type: string
+      loader:
+        type: string
+        
+  Count:
+    type: object
+    required:
+      - total
+    properties:
+      total:
+        type: integer
+        format: int64
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"

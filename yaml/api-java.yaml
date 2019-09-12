@@ -15,25 +15,25 @@ info:
   license: 
     name: "MIT"
 paths:
-  '/java/list/{loader}/{fileName}':
+  '/java/{type}/pkg/list/{loader}':
     get:
       tags:
-        - List Java Classes
-      summary: List Java Classes
-      operationId: listJavaClasses
+        - List Packages
+      summary: List Packages
+      operationId: listPackages
       consumes:
         - "application/json"
       produces:
         - application/json
       parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
         - name: loader
           in: path
           description: Filter by loader id
-          required: true
-          type: string
-        - name: fileName
-          in: path
-          description: Filter by jar file
           required: true
           type: string
         - name: atoken
@@ -65,12 +65,91 @@ paths:
           type: boolean
         - name: next
           in: query
-          description: If next is true, **loader, pkg is required
+          description: If next page
           required: false
           type: boolean
+        - name: fileName
+          in: query
+          description: Last file name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
         - name: pkg
           in: query
           description: Last pkg name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              type: string
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/java/{type}/class/list/{loader}':
+    get:
+      tags:
+        - List Classes
+      summary: List Classes
+      operationId: listClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next page
+          required: false
+          type: boolean
+        - name: fileName
+          in: query
+          description: Last file name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+        - name: pkg
+          in: query
+          description: Last package name of the previous list operation, **required** if **next** is true
           required: false
           type: string
         - name: name
@@ -89,17 +168,101 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/java/search':
-    post:
+  '/java/{type}/class/list/{loader}/{pkg}':
+    get:
       tags:
-        - Search Java Classes
-      summary: Search Java Classes
-      operationId: searchJavaClasses
+        - List Package Classes
+      summary: List Package Classes
+      operationId: listPackageClasses
       consumes:
         - "application/json"
       produces:
         - application/json
       parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
+        - name: loader
+          in: path
+          description: Filter by loader id
+          required: true
+          type: string
+        - name: pkg
+          in: path
+          description: Filter by package name
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of assets to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: global
+          in: query
+          description: True for system groovy classes
+          required: false
+          type: boolean
+        - name: next
+          in: query
+          description: If next page
+          required: false
+          type: boolean
+        - name: fileName
+          in: query
+          description: Last file name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: Last class name of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JavaClass'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/java/{type}/class/search':
+    post:
+      tags:
+        - Search Classes
+      summary: Search Classes
+      operationId: searchClasses
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
         - name: atoken
           in: query
           description: Auth token of the logged in user
@@ -118,7 +281,7 @@ paths:
           format: int32
         - name: global
           in: query
-          description: True for system groovy classes
+          description: True for system classes
           required: false
           type: boolean
         - name: query
@@ -138,17 +301,22 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/java/count':
+  '/java/{type}/class/count/all':
     get:
       tags:
-        - Count All Java Classes
-      summary: Count All Java Classes
-      operationId: countAllJavaClasses
+        - Count All Classes
+      summary: Count All Classes
+      operationId: countAllClasses
       consumes:
         - "application/json"
       produces:
         - application/json
       parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
         - name: atoken
           in: query
           description: Auth token of the logged in user
@@ -173,17 +341,22 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/java/count/{loader}':
+  '/java/{type}/class/count/{loader}':
     get:
       tags:
-        - Count Loader Java Classes
-      summary: Count Loader Java Classes
-      operationId: countLoaderJavaClasses
+        - Count Loader Classes
+      summary: Count Loader Classes
+      operationId: countLoaderClasses
       consumes:
         - "application/json"
       produces:
         - application/json
       parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
         - name: loader
           in: path
           description: Filter by loader id
@@ -213,75 +386,30 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/java/count/{loader}/{fileName}':
+  '/java/{type}/class/count/{loader}/{pkg}':
     get:
       tags:
-        - Count Jar Java Classes
-      summary: Count Jar Java Classes
-      operationId: countJarJavaClasses
+        - Count Loader Package Classes
+      summary: Count Loader Package Classes
+      operationId: countLoaderPackageClasses
       consumes:
         - "application/json"
       produces:
         - application/json
       parameters:
+        - name: type
+          in: path
+          description: Type ** [ java || groovy ] **
+          required: true
+          type: string
         - name: loader
           in: path
           description: Filter by loader id
-          required: true
-          type: string
-        - name: fileName
-          in: path
-          description: Filter by jar file
-          required: true
-          type: string
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Another domain Key, optional (admin access)
-          required: false
-          type: string
-        - name: global
-          in: query
-          description: Is global loader classes
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: successful operation
-          schema: 
-            $ref: "#/definitions/Count"
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/java/count/{loader}/{fileName}/{pkg}':
-    get:
-      tags:
-        - Count Jar Package Java Classes
-      summary: Count Jar Package Java Classes
-      operationId: countJarPackageJavaClasses
-      consumes:
-        - "application/json"
-      produces:
-        - application/json
-      parameters:
-        - name: loader
-          in: path
-          description: Filter by loader id
-          required: true
-          type: string
-        - name: fileName
-          in: path
-          description: Filter by jar file
           required: true
           type: string
         - name: pkg
           in: path
-          description: Filter by package
+          description: Filter by package name
           required: true
           type: string
         - name: atoken

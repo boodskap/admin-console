@@ -1,0 +1,221 @@
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/loader/create/{loader}':
+    get:
+      tags:
+        - Create Class Loader
+      summary: Create Class Loader
+      operationId: createClassLoader
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: loader
+          in: path
+          description: Class loader id
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global class loader (admin access)
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/loader/delete/{loader}':
+    delete:
+      tags:
+        - Delete Class Loader
+      summary: Delete Class Loader
+      operationId: deleteClassLoader
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: loader
+          in: path
+          description: Class loader id
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: global
+          in: query
+          description: Is global class loader (admin access)
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/loader/count':
+    get:
+      tags:
+        - Count Class Loaders
+      summary: Count Class Loaders
+      operationId: countClassLoaders
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/loader/count/all':
+    get:
+      tags:
+        - Count All Class Loaders
+      summary: Count All Class Loaders
+      operationId: countAllClassLoaders
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: global
+          in: query
+          description: Is global class loader
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/loader/list':
+    get:
+      tags:
+        - List Class Loaders
+      summary: List Class Loaders
+      operationId: listClassLoaders
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: global
+          in: query
+          description: Is global class loader
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              type: string
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  Count:
+    type: object
+    required:
+      - total
+    properties:
+      total:
+        type: integer
+        format: int64
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
