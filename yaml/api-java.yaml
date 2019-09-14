@@ -301,7 +301,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/java/{type}/class/count/all':
+  '/java/{type}/class/count':
     get:
       tags:
         - Count All Classes
