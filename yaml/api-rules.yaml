@@ -428,11 +428,11 @@ definitions:
     - $ref: '#/definitions/Rule'
     - type: object
       required:
-       - 'messageId'
+       - 'specId'
        - 'language'
        - 'code'
       properties:
-        messageId:
+        specId:
           type: string
   Rule:
     type: object
@@ -453,6 +453,10 @@ definitions:
         type: string
       compilable:
         type: boolean
+      loader:
+        type: string
+      globalLoader:
+        type: string
       description:
         type: string
       contexts:

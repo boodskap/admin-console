@@ -371,8 +371,6 @@ definitions:
       properties:
         type:
           type: string
-        description:
-          type: string
   Count:
     type: object
     required:
@@ -400,6 +398,10 @@ definitions:
         type: string
       compilable:
         type: boolean
+      loader:
+        type: string
+      globalLoader:
+        type: string
       description:
         type: string
       contexts:

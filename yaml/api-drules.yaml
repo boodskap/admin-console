@@ -210,6 +210,10 @@ definitions:
         type: string
       compilable:
         type: boolean
+      loader:
+        type: string
+      globalLoader:
+        type: string
       description:
         type: string
       contexts:
