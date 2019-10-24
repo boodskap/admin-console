@@ -15,7 +15,7 @@ info:
   license: 
     name: "MIT"
 paths:
-  '/record/insert/{atoken}/{specId}/{rid}':
+  '/record/insert/{specId}/{rid}':
     post:
       tags:
         - Insert Record
@@ -26,11 +26,6 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: atoken
-          in: path
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
@@ -39,6 +34,11 @@ paths:
         - name: rid
           in: path
           description: Record's unique identifier
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
@@ -61,7 +61,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/record/upsert/{atoken}/{specId}':
+  '/record/upsert/{specId}':
     post:
       tags:
         - Upsert Record
@@ -72,14 +72,14 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: atoken
-          in: path
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
@@ -107,7 +107,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/record/merge/{atoken}/{specId}/{rid}':
+  '/record/merge/{specId}/{rid}':
     post:
       tags:
         - Merge Record
@@ -118,11 +118,6 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: atoken
-          in: path
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
@@ -131,6 +126,11 @@ paths:
         - name: rid
           in: path
           description: Record's unique identifier (optional)
+          required: true
+          type: string
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
@@ -163,7 +163,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/record/get/{atoken}/{specId}/{rid}':
+  '/record/get/{specId}/{rid}':
     get:
       tags:
         - Retrieve Record
@@ -174,11 +174,6 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: atoken
-          in: path
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
@@ -187,6 +182,11 @@ paths:
         - name: rid
           in: path
           description: Unique ID of the record
+          required: true
+          type: string
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
@@ -203,7 +203,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/record/count/{atoken}/{specId}':
+  '/record/count/{specId}':
     get:
       tags:
         - Count All Records
@@ -214,14 +214,14 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: atoken
-          in: path
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
@@ -249,14 +249,14 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
@@ -287,7 +287,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/record/delete/{atoken}/{specId}/{rid}':
+  '/record/delete/{specId}/{rid}':
     delete:
       tags:
         - Delete Record
@@ -298,11 +298,6 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: atoken
-          in: path
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
@@ -311,6 +306,11 @@ paths:
         - name: rid
           in: path
           description: Record's unique identifier
+          required: true
+          type: string
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
@@ -327,7 +327,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/record/clear/{atoken}/{specId}':
+  '/record/clear/{specId}':
     delete:
       tags:
         - Delete All Records
@@ -338,14 +338,14 @@ paths:
       produces:
         - "application/json"
       parameters:
-        - name: atoken
-          in: path
-          description: Auth token of the logged in user
-          required: true
-          type: string
         - name: specId
           in: path
           description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
           required: true
           type: string
         - name: dkey
