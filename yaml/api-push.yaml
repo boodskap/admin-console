@@ -1,4 +1,20 @@
-#ApiError,PushMessage,PushResult
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
   '/push/message':
     post:
       tags:
@@ -207,3 +223,60 @@
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  MessageHeader:
+    type: object
+    properties:
+      dkey:
+        type: string
+        description: domain key
+      akey:
+        type: string
+        description: domain api-key
+      did:
+        type: string
+        description: device id
+      dmdl:
+        type: string
+        description: device model
+      fwver:
+        type: string
+        description: device firmware version
+      mid:
+        type: string
+        description: message identifier
+    required:
+      - key
+      - api
+      - did
+      - dmdl
+      - fwver
+      - mid
+  PushMessage:
+    type: object
+    properties:
+      header:
+        $ref: '#/definitions/MessageHeader'
+      data:
+        type: object
+        description: message payload JSON object
+    required:
+      - header
+      - data
+  PushResult:
+    type: object
+    required:
+      - muid
+    properties:
+      muid:
+        type: string
+        description: message unique identifier

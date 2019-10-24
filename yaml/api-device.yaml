@@ -1,4 +1,20 @@
-#Success,ApiError,Count,IDResult,Device,Property,DeviceGroup,CommandStatus,SentCommandStatus,Command,TemplateCommand,BroadcastCommand,TemplateBroadcastCommand,RawCommand,BroadcastRawCommand,GroupCommand,GroupTemplateCommand,GroupBroadcastCommand,GroupTemplateBroadcastCommand,GroupRawCommand,GroupBroadcastRawCommand
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
   '/device/upsert':
     post:
       tags:
@@ -1494,3 +1510,451 @@
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  BroadcastCommand:
+    type: object
+    required:
+      - data
+      - deviceModel
+    properties:
+      data:
+        type: object
+      deviceModel:
+        type: string
+      deviceVersion:
+        type: string
+  BroadcastRawCommand:
+    type: object
+    required:
+      - deviceModel
+      - data
+      - format
+    properties:
+      deviceModel:
+        type: string
+      deviceVersion:
+        type: string
+      data:
+        type: string
+      format:
+        type: string
+        enum:
+         - BASE64
+         - HEX
+         - TEXT
+  Command:
+    type: object
+    required:
+      - deviceIds
+      - data
+    properties:
+      deviceIds:
+        type: array
+        items:
+          type: string
+      data:
+        type: object
+  CommandStatus:
+    type: object
+    properties:
+      domainKey:
+        type: string
+      requestId:
+        type: string
+      deviceId:
+        type: string
+      corrId:
+        type: integer
+        format: int64
+        description: unique command identifier or this device
+      status:
+        type: string
+        enum:
+          - QUEUED
+          - NOT_FOUND
+          - NOT_CONNECTED
+          - SENT
+          - FAILED
+          - ACKED
+          - NACKED
+          - NOT_ALLOWED
+          - CHANNEL_INACTIVE
+      createdStamp:
+        type: integer
+        format: int64
+      queuedStamp:
+        type: integer
+        format: int64
+      sentStamp:
+        type: integer
+        format: int64
+      ackedStamp:
+        type: integer
+        format: int64
+      commandType:
+        type: string
+        enum:
+          - JSON_COMMAND
+          - RAW_COMMAND
+      dataChannel:
+        type: string
+        enum:
+          - UDP
+          - MQTT
+          - HTTP
+          - COAP
+          - TCP
+          - FCM
+          - LORA
+          - FTP
+          - TFTP
+      nodeId:
+        type: string
+      nodeUid:
+        type: string
+        format: uuid
+      description:
+        type: string
+      reportedIp:
+        type: string
+      reportedPort:
+        type: integer
+        format: int32
+  Count:
+    type: object
+    required:
+      - total
+    properties:
+      total:
+        type: integer
+        format: int64
+  Device:
+    type: object
+    required:
+      - deviceId
+    properties:
+      deviceId:
+        type: string
+      domainKey:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      modelId:
+        type: string
+      version:
+        type: string
+      password:
+        type: string
+      assetId:
+        type: string
+      reportedIp:
+        type: string
+      reportedPort:
+        type: integer
+        format: int32
+      nodeId:
+        type: string
+      nodeUid:
+        type: string
+      channel:
+        type: string
+      registeredStamp:
+        type: integer
+        format: int64
+      reportedStamp:
+        type: integer
+        format: int64
+  DeviceGroup:
+    allOf:
+    - $ref: '#/definitions/Group'
+    - type: object
+      required:
+       - 'ownerDeviceId'
+      properties:
+        ownerDeviceId:
+          type: string
+  DomainObject:
+    type: object
+    required:
+      - domainKey
+    properties:
+      domainKey:
+        type: string
+  Group:
+    type: object
+    required:
+      - groupId
+      - name
+    properties:
+      domainKey:
+        type: string
+      groupId:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      individualBroadcast:
+        type: boolean
+      groupEmail:
+        type: string
+      groupPhone:
+        type: string
+      createdStamp:
+        type: integer
+        format: int64
+      updatedStamp:
+        type: integer
+        format: int64
+  GroupBroadcastCommand:
+    allOf:
+    - $ref: '#/definitions/GroupCommand'
+    - type: object
+      required:
+       - 'deviceModel'
+      properties:
+        deviceModel:
+          type: string
+        deviceVersion:
+          type: string
+  GroupBroadcastRawCommand:
+    allOf:
+    - $ref: '#/definitions/GroupRawCommand'
+    - type: object
+      required:
+       - 'deviceModel'
+      properties:
+        deviceModel:
+          type: string
+        deviceVersion:
+          type: string
+  GroupCommand:
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: object
+  GroupRawCommand:
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: string
+      format:
+        type: string
+        enum:
+         - BASE64
+         - HEX
+         - TEXT
+  GroupTemplateBroadcastCommand:
+    required:
+      - command
+      - templateId
+    properties:
+      command:
+        $ref: "#/definitions/GroupBroadcastCommand"
+      templateId:
+        type: string
+      system:
+        type: boolean
+      mergeContent:
+        type: object
+  GroupTemplateCommand:
+    required:
+      - command
+      - templateId
+    properties:
+      command:
+        $ref: "#/definitions/GroupCommand"
+      templateId:
+        type: string
+      system:
+        type: boolean
+      mergeContent:
+        type: object
+  IDResult:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+  Property:
+    allOf:
+    - $ref: '#/definitions/SystemProperty'
+    - $ref: '#/definitions/DomainObject'
+    - type: object
+  RawCommand:
+    type: object
+    required:
+      - deviceIds
+      - data
+      - format
+    properties:
+      deviceIds:
+        type: array
+        items:
+          type: string
+      data:
+        type: string
+      format:
+        type: string
+        enum:
+         - BASE64
+         - HEX
+         - TEXT
+  SentCommandStatus:
+    type: object
+    properties:
+      domainKey:
+        type: string
+      requestId:
+        type: string
+      deviceIds:
+        type: array
+        items:
+          type: string
+      data:
+        type: object
+      rawData:
+        type: string
+      format:
+        type: string
+        enum:
+         - BASE64
+         - HEX
+         - TEXT
+      deviceId:
+        type: string
+      commandId:
+        type: integer
+        format: int32
+      groupId:
+        type: string
+      templateId:
+        type: string
+      system:
+        type: boolean
+      mergeContent:
+        type: object
+      deviceModel:
+        type: string
+      deviceVersion:
+        type: string
+      totalCount:
+        type: integer
+        format: int32
+      sentCount:
+        type: integer
+        format: int32
+      failedCount:
+        type: integer
+        format: int32
+      queuedStamp:
+        type: integer
+        format: int64
+      completedStamp:
+        type: integer
+        format: int64
+      status:
+        type: string
+        enum:
+          - QUEUED
+          - PROCESSING
+          - PROCESSED
+          - FAILED
+      commandType:
+        type: string
+        enum:
+          - COMMAND
+          - RAW_COMMAND
+          - BROADCAST_COMMAND
+          - RAW_BROADCAST_COMMAND
+          - GROUP_COMMAND
+          - GROUP_RAW_COMMAND
+          - TEMPLATE_COMMAND
+          - TEMPLATE_BROADCAST_COMMAND
+          - GROUP_TEMPLATE_COMMAND
+          - GROUP_TEMPLATE_BROADCAST_COMMAND
+  Storable:
+    type: object
+    properties:
+      dataFormat:
+        type: string
+        description: Required if **dataType** is **blob**
+        enum:
+          - AS_IS
+          - JSON
+          - HEX
+          - BASE64
+      description:
+        type: string
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  SystemProperty:
+    allOf:
+    - $ref: '#/definitions/Storable'
+    - type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        createdStamp:
+          type: integer
+          format: int64
+        updatedStamp:
+          type: integer
+          format: int64
+  TemplateBroadcastCommand:
+    required:
+      - deviceModel
+      - templateId
+      - mergeContent
+    properties:
+      deviceModel:
+        type: string
+      deviceVersion:
+        type: string
+      templateId:
+        type: string
+      system:
+        type: boolean
+      mergeContent:
+        type: object
+  TemplateCommand:
+    required:
+      - command
+      - templateId
+    properties:
+      command:
+        $ref: "#/definitions/Command"
+      templateId:
+        type: string
+      system:
+        type: boolean
+      mergeContent:
+        type: object
