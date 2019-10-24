@@ -1,0 +1,398 @@
+swagger: "2.0"
+basePath: /api
+schemes: 
+  - http
+  - https
+produces: 
+  - "application/json"
+info: 
+  version: "3.0.0-alpha1"
+  title: "Boodskap API"
+  description: "Boodskap IoT Platform API"
+  termsOfService: "https://boodskap.io/terms-conditions"
+  contact: 
+    name: "Boodskap Team"
+  license: 
+    name: "MIT"
+paths:
+  '/record/insert/{atoken}/{specId}/{rid}':
+    post:
+      tags:
+        - Insert Record
+      summary: Insert Record
+      operationId: insertRecord
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: rid
+          in: path
+          description: Record's unique identifier
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: true
+          type: string
+        - name: data
+          in: body
+          description: Record JSON object
+          required: true
+          schema:
+            type: object
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Success'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/record/upsert/{atoken}/{specId}':
+    post:
+      tags:
+        - Upsert Record
+      summary: Insert/Update Record
+      operationId: upsertRecord
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: rid
+          in: query
+          description: Record's unique identifier (optional)
+          required: false
+          type: string
+        - name: data
+          in: body
+          description: Record JSON object
+          required: true
+          schema:
+            type: object
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/InsertResult'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/record/merge/{atoken}/{specId}/{rid}':
+    post:
+      tags:
+        - Merge Record
+      summary: Merge Record
+      operationId: mergeRecord
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: rid
+          in: path
+          description: Record's unique identifier (optional)
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: fail
+          in: query
+          description: Fail if record not exists (default false)
+          required: false
+          type: boolean
+        - name: insert
+          in: query
+          description: Insert if record not exists (default true)
+          required: false
+          type: boolean
+        - name: data
+          in: body
+          description: Record JSON object
+          required: true
+          schema:
+            type: object
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Success'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/record/get/{atoken}/{specId}/{rid}':
+    get:
+      tags:
+        - Retrieve Record
+      summary: Retrieve Record
+      operationId: retrieveRecord
+      consumes:
+        - "text/plain"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: rid
+          in: path
+          description: Unique ID of the record
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/record/count/{atoken}/{specId}':
+    get:
+      tags:
+        - Count All Records
+      summary: Count All Records
+      operationId: countAllRecords
+      consumes:
+        - "text/plain"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Count'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/record/search':
+    post:
+      tags:
+        - Search Records
+      summary: Search Records
+      operationId: searchRecords
+      consumes:
+        - "application/json"
+      produces:
+        - application/json
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: false
+          type: string
+        - name: pageSize
+          in: query
+          description: Maximum number of objects to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: query
+          in: body
+          description: Search string
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              type: object
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/record/delete/{atoken}/{specId}/{rid}':
+    delete:
+      tags:
+        - Delete Record
+      summary: Delete Record
+      operationId: deleteRecord
+      consumes:
+        - "text/plain"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: rid
+          in: path
+          description: Record's unique identifier
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Success'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/record/clear/{atoken}/{specId}':
+    delete:
+      tags:
+        - Delete All Records
+      summary: Delete All Records
+      operationId: deleteAllRecords
+      consumes:
+        - "text/plain"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: path
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Another Domain Key, optional (admin access)
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Success'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+definitions:
+  ApiError: 
+    type: "object"
+    required: 
+      - "code"
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"
+  Count:
+    type: object
+    required:
+      - total
+    properties:
+      total:
+        type: integer
+        format: int64
+  InsertResult:
+    type: object
+    required:
+      - specId
+      - rid
+    properties:
+      specId:
+        type: string
+        description: Record spec ID
+      rid:
+        type: string
+        description: record unique identifier
+  Success: 
+    type: "object"
+    required:
+      - code
+    properties: 
+      code: 
+        type: "string"
+      message: 
+        type: "string"

@@ -456,10 +456,9 @@ definitions:
         format: int64
   JavaClass:
     type: object
-    discriminator: javaClassType
     required:
-    - pkg
-    - name
+      - pkg
+      - name
     properties:
       pkg:
         type: string

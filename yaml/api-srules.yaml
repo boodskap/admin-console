@@ -420,10 +420,9 @@ definitions:
         format: int64
   Rule:
     type: object
-    discriminator: ruleType
     required:
-    - language
-    - code
+      - language
+      - code
     properties:
       domainKey:
         type: string

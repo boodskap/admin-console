@@ -338,16 +338,15 @@ definitions:
     - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/DomainObject'
     - type: object
-      discriminator: domainType
   DomainObject:
     type: object
-    discriminator: domainObjectType
+    required:
+      - domainKey
     properties:
       domainKey:
         type: string
   Entity:
     type: object
-    discriminator: entityType
     properties:
       email:
         type: string
@@ -409,7 +408,6 @@ definitions:
         type: string
   Storable:
     type: object
-    discriminator: storableType
     properties:
       dataFormat:
         type: string
@@ -434,7 +432,9 @@ definitions:
     allOf:
     - $ref: '#/definitions/Storable'
     - type: object
-      discriminator: systemPropertyType
+      required:
+        - name
+        - value
       properties:
         name:
           type: string
@@ -451,7 +451,8 @@ definitions:
     - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/DomainObject'
     - type: object
-      discriminator: userType
+      required:
+        - userId
       properties:
         userId:
           type: string

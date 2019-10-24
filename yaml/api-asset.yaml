@@ -1424,16 +1424,16 @@ definitions:
         format: int64
   DomainObject:
     type: object
-    discriminator: domainObjectType
+    required:
+      - domainKey
     properties:
       domainKey:
         type: string
   Group:
     type: object
-    discriminator: groupType
     required:
-    - groupId
-    - name
+      - groupId
+      - name
     properties:
       domainKey:
         type: string
@@ -1460,10 +1460,8 @@ definitions:
     - $ref: '#/definitions/SystemProperty'
     - $ref: '#/definitions/DomainObject'
     - type: object
-      discriminator: propertyType
   Storable:
     type: object
-    discriminator: storableType
     properties:
       dataFormat:
         type: string
@@ -1488,7 +1486,9 @@ definitions:
     allOf:
     - $ref: '#/definitions/Storable'
     - type: object
-      discriminator: systemPropertyType
+      required:
+        - name
+        - value
       properties:
         name:
           type: string

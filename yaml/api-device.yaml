@@ -1522,10 +1522,9 @@ definitions:
         type: "string"
   BroadcastCommand:
     type: object
-    discriminator: broadcastCommandType
     required:
-    - data
-    - deviceModel
+      - data
+      - deviceModel
     properties:
       data:
         type: object
@@ -1535,11 +1534,10 @@ definitions:
         type: string
   BroadcastRawCommand:
     type: object
-    discriminator: broadcastRawCommandType
     required:
-    - deviceModel
-    - data
-    - format
+      - deviceModel
+      - data
+      - format
     properties:
       deviceModel:
         type: string
@@ -1555,10 +1553,9 @@ definitions:
          - TEXT
   Command:
     type: object
-    discriminator: commandType
     required:
-    - deviceIds
-    - data
+      - deviceIds
+      - data
     properties:
       deviceIds:
         type: array
@@ -1689,16 +1686,16 @@ definitions:
           type: string
   DomainObject:
     type: object
-    discriminator: domainObjectType
+    required:
+      - domainKey
     properties:
       domainKey:
         type: string
   Group:
     type: object
-    discriminator: groupType
     required:
-    - groupId
-    - name
+      - groupId
+      - name
     properties:
       domainKey:
         type: string
@@ -1744,17 +1741,15 @@ definitions:
           type: string
   GroupCommand:
     type: object
-    discriminator: groupCommandType
     required:
-    - data
+      - data
     properties:
       data:
         type: object
   GroupRawCommand:
     type: object
-    discriminator: groupRawCommandType
     required:
-    - data
+      - data
     properties:
       data:
         type: string
@@ -1802,14 +1797,12 @@ definitions:
     - $ref: '#/definitions/SystemProperty'
     - $ref: '#/definitions/DomainObject'
     - type: object
-      discriminator: propertyType
   RawCommand:
     type: object
-    discriminator: rawCommandType
     required:
-    - deviceIds
-    - data
-    - format
+      - deviceIds
+      - data
+      - format
     properties:
       deviceIds:
         type: array
@@ -1898,7 +1891,6 @@ definitions:
           - GROUP_TEMPLATE_BROADCAST_COMMAND
   Storable:
     type: object
-    discriminator: storableType
     properties:
       dataFormat:
         type: string
@@ -1923,7 +1915,9 @@ definitions:
     allOf:
     - $ref: '#/definitions/Storable'
     - type: object
-      discriminator: systemPropertyType
+      required:
+        - name
+        - value
       properties:
         name:
           type: string

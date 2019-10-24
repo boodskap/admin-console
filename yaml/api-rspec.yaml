@@ -15,12 +15,12 @@ info:
   license: 
     name: "MIT"
 paths:
-  '/brules/upsert':
+  '/rspec/create':
     post:
       tags:
-        - Upsert Binaray Rule
-      summary: Create / Update Binaray Rule
-      operationId: upsertBinarayRule
+        - Create Record Definition
+      summary: Create Record Definition
+      operationId: createRecordDefinition
       consumes:
         - "application/json"
       produces:
@@ -33,10 +33,10 @@ paths:
           type: string
         - name: entity
           in: body
-          description: BinaryRule JSON object
+          description: RecordSpecification JSON object
           required: true
           schema:
-            $ref: '#/definitions/BinaryRule'
+            $ref: '#/definitions/RecordSpecification'
       responses:
         '200':
           description: successful operation
@@ -46,20 +46,20 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/brules/get/{type}':
+  '/rspec/get/{specId}':
     get:
       tags:
-        - Get Binary Rule
-      summary: Retreive Binary Rule
-      operationId: getBinaryRule
+        - Get Record Definition
+      summary: Retreive Record Definition
+      operationId: getRecordDefinition
       consumes:
         - "application/json"
       produces:
         - "application/json"
       parameters:
-        - name: type
+        - name: specId
           in: path
-          description: Binary rule identifier type
+          description: Record Spec id
           required: true
           type: string
         - name: atoken
@@ -76,25 +76,55 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/BinaryRule'
+            $ref: '#/definitions/RecordSpecification'
         "417":
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/brules/delete/{type}':
+  '/rspec/delete':
     delete:
       tags:
-        - Delete Binary Rule
-      summary: Delete Binary Rule
-      operationId: deleteBinaryRule
+        - Delete All Record Definitions
+      summary: Delete All Record Definitions
+      operationId: deleteAllRecordDefinitions
       consumes:
         - "application/json"
       produces:
         - "application/json"
       parameters:
-        - name: type
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Success"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rspec/delete/{specId}':
+    delete:
+      tags:
+        - Delete Record Definition
+      summary: Delete Record Definition
+      operationId: deleteRecordDefinition
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: specId
           in: path
-          description: Binary rule identifier type
+          description: Record Spec id
           required: true
           type: string
         - name: atoken
@@ -116,42 +146,66 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/brules/delete/all':
-    delete:
-      tags:
-        - Delete All Binary Rules
-      summary: Delete All Binary Rules
-      operationId: deleteAllBinaryRules
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Domain Key, optional
-          required: false
-          type: string
-      responses:
-        '200':
-          description: successful operation
-          schema: 
-            $ref: "#/definitions/Success"
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/brules/count/all':
+  '/rspec/list':
     get:
       tags:
-        - Count All Binary Rules
-      summary: Count All Binary Rules
-      operationId: countAllBinaryRules
+        - List Record Definitions
+      summary: List Record Definition
+      operationId: listRecordDefinitions
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Page index, starts from 0
+          required: false
+          type: integer
+          format: int32
+        - name: pageSize
+          in: query
+          description: Maximum number of objects to be listed
+          required: false
+          type: integer
+          format: int32
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: next
+          in: query
+          description: If next is true, **eid** is required
+          required: false
+          type: boolean
+        - name: specId
+          in: query
+          description: Last Record Definition Id of the previous list operation, **required** if **next** is true
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RecordSpecification'
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rspec/countall':
+    get:
+      tags:
+        - Count All Record Definition
+      summary: Count All Record Definition
+      operationId: countAllRecordDefinitions
       consumes:
         - "application/json"
       produces:
@@ -171,12 +225,12 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/brules/count':
+  '/rspec/count':
     get:
       tags:
-        - Count Binary Rules
-      summary: Count Binary Rules
-      operationId: countBinaryRules
+        - Count Domain Record Definitions
+      summary: Count Domain Record Definitions
+      operationId: countDomainRecordDefinitions
       consumes:
         - "application/json"
       produces:
@@ -201,134 +255,107 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/brules/list':
-    get:
-      tags:
-        - List Binary Rules
-      summary: List Binary Rules
-      operationId: listBinaryRules
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - name: atoken
-          in: query
-          description: Auth token of the logged in user
-          required: true
-          type: string
-        - name: dkey
-          in: query
-          description: Domain Key, optional
-          required: false
-          type: string
-        - name: load
-          in: query
-          description: load the source code, by default yes
-          required: false
-          type: boolean
-        - name: page
-          in: query
-          description: Page index, starts from 0
-          required: false
-          type: integer
-          format: int32
-        - name: pageSize
-          in: query
-          description: Maximum number of rules to be listed
-          required: false
-          type: integer
-          format: int32
-        - name: next
-          in: query
-          description: If next is true, **type** is required
-          required: false
-          type: boolean
-        - name: type
-          in: query
-          description: >-
-            type value of the previous list operation, **required** if **next** is specified
-          required: false
-          type: string      
-      responses:
-        '200':
-          description: successful operation
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/BinaryRule'
-        "417":
-          description: "API Error"
-          schema: 
-            $ref: "#/definitions/ApiError"
-  '/brules/search':
+  '/rspec/create/field/{specId}':
     post:
       tags:
-        - Search Binary Rules
-      summary: Search Binary Rules
-      operationId: searchBinaryRules
+        - Create Record Field
+      summary: Create Record Field
+      operationId: createRecordField
       consumes:
         - "application/json"
       produces:
-        - application/json
+        - "application/json"
       parameters:
+        - name: specId
+          in: path
+          description: Record Spec id
+          required: true
+          type: string
         - name: atoken
           in: query
           description: Auth token of the logged in user
           required: true
           type: string
-        - name: load
-          in: query
-          description: load the source code, by default yes
-          required: false
-          type: boolean
-        - name: pageSize
-          in: query
-          description: Maximum number of objects to be listed
-          required: false
-          type: integer
-          format: int32
         - name: dkey
           in: query
           description: Domain Key, optional
           required: false
           type: string
-        - name: query
+        - name: entity
           in: body
-          description: Search string
+          description: RecordField JSON object
           required: true
           schema:
-            type: string
+            $ref: '#/definitions/RecordField'
       responses:
         '200':
           description: successful operation
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/BinaryRule'
+          schema: 
+            $ref: "#/definitions/RecordSpecification"
         "417":
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/brules/invoke/{type}/{messageId}':
-    get:
+  '/rspec/modify/field/{specId}':
+    post:
       tags:
-        - Invoke a Binary Rule
-      summary: Invoke a Binary Rule
-      operationId: invokeBinaryRule
+        - Modify Record Field
+      summary: Modify Record Field
+      operationId: modifyRecordField
       consumes:
         - "application/json"
       produces:
         - "application/json"
       parameters:
-        - name: type
+        - name: specId
           in: path
-          description: Binary rule identifier type
+          description: Record Spec id
           required: true
           type: string
-        - name: messageId
+        - name: atoken
+          in: query
+          description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+        - name: entity
+          in: body
+          description: RecordField JSON object
+          required: true
+          schema:
+            $ref: '#/definitions/RecordField'
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/RecordSpecification"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
+  '/rspec/remove/field/{specId}/{name}':
+    delete:
+      tags:
+        - Delete Record Field
+      summary: Delete Record Field
+      operationId: deleteRecordField
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: specId
           in: path
-          description: Raw message identifier
+          description: Record Spec id
+          required: true
+          type: string
+        - name: name
+          in: path
+          description: Field Name
           required: true
           type: string
         - name: atoken
@@ -350,6 +377,41 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
+  '/rspec/count/fields/{specId}':
+    get:
+      tags:
+        - Count Record Definition Fields
+      summary: Count Record Definition Fields
+      operationId: countRecordDefinitionFields
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: specId
+          in: path
+          description: Record Spec id
+          required: true
+          type: string
+        - name: atoken
+          in: query
+          description: Auth token of the logged in admin user
+          required: true
+          type: string
+        - name: dkey
+          in: query
+          description: Domain Key, optional
+          required: false
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: "#/definitions/Count"
+        "417":
+          description: "API Error"
+          schema: 
+            $ref: "#/definitions/ApiError"
 definitions:
   ApiError: 
     type: "object"
@@ -360,17 +422,6 @@ definitions:
         type: "string"
       message: 
         type: "string"
-  BinaryRule:
-    allOf:
-    - $ref: '#/definitions/Rule'
-    - type: object
-      required:
-       - 'type'
-       - 'language'
-       - 'code'
-      properties:
-        type:
-          type: string
   Count:
     type: object
     required:
@@ -379,45 +430,64 @@ definitions:
       total:
         type: integer
         format: int64
-  Rule:
+  RecordField:
     type: object
     required:
-      - language
-      - code
+      - name
+      - dataType
     properties:
       domainKey:
         type: string
-      language:
+      specId:
+        type: string
+      name:
+        type: string
+      dataType:
         type: string
         enum:
-          - GROOVY
-          - JAVA_SCRIPT
-          - NODE_JS
-      code:
+         - BOOLEAN
+         - BYTE
+         - CHAR
+         - SHORT
+         - INT
+         - LONG
+         - FLOAT
+         - DOUBLE
+         - STRING
+         - UUID
+         - BLOB
+         - JSON
+      description:
         type: string
-      compilable:
+      indexed:
         type: boolean
-      loader:
+      fulltextIndexed:
+        type: boolean
+  RecordSpecification:
+    type: object
+    required:
+      - specId
+      - name
+      - fields
+    properties:
+      domainKey:
         type: string
-      globalLoader:
+      specId:
+        type: string
+      name:
         type: string
       description:
         type: string
-      contexts:
+      fields:
         type: array
         items:
-          type: string
-      plugins:
-        type: array
-        items:
-          type: string
+          $ref: '#/definitions/RecordField'
       createdStamp:
         type: integer
         format: int64
       updatedStamp:
         type: integer
         format: int64
-        
   Success: 
     type: "object"
     required:

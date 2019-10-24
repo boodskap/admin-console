@@ -638,7 +638,8 @@ definitions:
         type: "string"
   ArchiveFile:
     type: object
-    discriminator: archiveFileType
+    required:
+      - fileName
     properties:
       fileName:
         type: string

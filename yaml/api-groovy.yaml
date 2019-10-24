@@ -387,10 +387,9 @@ definitions:
           type: string
   JavaClass:
     type: object
-    discriminator: javaClassType
     required:
-    - pkg
-    - name
+      - pkg
+      - name
     properties:
       pkg:
         type: string
