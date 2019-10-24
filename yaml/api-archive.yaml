@@ -1,20 +1,4 @@
-swagger: "2.0"
-basePath: /api
-schemes: 
-  - http
-  - https
-produces: 
-  - "application/json"
-info: 
-  version: "3.0.0-alpha1"
-  title: "Boodskap API"
-  description: "Boodskap IoT Platform API"
-  termsOfService: "https://boodskap.io/terms-conditions"
-  contact: 
-    name: "Boodskap Team"
-  license: 
-    name: "MIT"
-paths:
+#Success,ApiError,Count,ArchiveFile
   '/archive/{type}/upoad':
     post:
       tags:
@@ -626,40 +610,3 @@ paths:
           schema: 
             $ref: "#/definitions/ApiError"
             
-definitions:
-  ApiError: 
-    type: "object"
-    required: 
-      - "code"
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"
-  ArchiveFile:
-    type: object
-    required:
-      - fileName
-    properties:
-      fileName:
-        type: string
-      loader:
-        type: string
-        
-  Count:
-    type: object
-    required:
-      - total
-    properties:
-      total:
-        type: integer
-        format: int64
-  Success: 
-    type: "object"
-    required:
-      - code
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"

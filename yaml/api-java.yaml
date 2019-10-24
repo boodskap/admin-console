@@ -1,20 +1,4 @@
-swagger: "2.0"
-basePath: /api
-schemes: 
-  - http
-  - https
-produces: 
-  - "application/json"
-info: 
-  version: "3.0.0-alpha1"
-  title: "Boodskap API"
-  description: "Boodskap IoT Platform API"
-  termsOfService: "https://boodskap.io/terms-conditions"
-  contact: 
-    name: "Boodskap Team"
-  license: 
-    name: "MIT"
-paths:
+#Success,ApiError,Count,JavaClass
   '/java/{type}/pkg/list/{loader}':
     get:
       tags:
@@ -436,43 +420,3 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-definitions:
-  ApiError: 
-    type: "object"
-    required: 
-      - "code"
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"
-  Count:
-    type: object
-    required:
-      - total
-    properties:
-      total:
-        type: integer
-        format: int64
-  JavaClass:
-    type: object
-    required:
-      - pkg
-      - name
-    properties:
-      pkg:
-        type: string
-      name:
-        type: string
-      loader:
-        type: string
-        
-  Success: 
-    type: "object"
-    required:
-      - code
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"

@@ -1,20 +1,4 @@
-swagger: "2.0"
-basePath: /api
-schemes: 
-  - http
-  - https
-produces: 
-  - "application/json"
-info: 
-  version: "3.0.0-alpha1"
-  title: "Boodskap API"
-  description: "Boodskap IoT Platform API"
-  termsOfService: "https://boodskap.io/terms-conditions"
-  contact: 
-    name: "Boodskap Team"
-  license: 
-    name: "MIT"
-paths:
+#ApiError,Success,InsertResult,Count
   '/record/insert/{atoken}/{specId}/{rid}':
     post:
       tags:
@@ -238,7 +222,7 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-  '/record/search':
+  '/record/search/{specId}':
     post:
       tags:
         - Search Records
@@ -252,6 +236,11 @@ paths:
         - name: atoken
           in: query
           description: Auth token of the logged in user
+          required: true
+          type: string
+        - name: specId
+          in: path
+          description: Well defined unique record spec ID
           required: true
           type: string
         - name: dkey
@@ -357,42 +346,3 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-definitions:
-  ApiError: 
-    type: "object"
-    required: 
-      - "code"
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"
-  Count:
-    type: object
-    required:
-      - total
-    properties:
-      total:
-        type: integer
-        format: int64
-  InsertResult:
-    type: object
-    required:
-      - specId
-      - rid
-    properties:
-      specId:
-        type: string
-        description: Record spec ID
-      rid:
-        type: string
-        description: record unique identifier
-  Success: 
-    type: "object"
-    required:
-      - code
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"

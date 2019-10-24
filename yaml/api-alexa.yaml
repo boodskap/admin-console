@@ -1,20 +1,4 @@
-swagger: "2.0"
-basePath: /api
-schemes: 
-  - http
-  - https
-produces: 
-  - "application/json"
-info: 
-  version: "3.0.0-alpha1"
-  title: "Boodskap API"
-  description: "Boodskap IoT Platform API"
-  termsOfService: "https://boodskap.io/terms-conditions"
-  contact: 
-    name: "Boodskap Team"
-  license: 
-    name: "MIT"
-paths:
+#ApiError,Alexa,IDResult,Count,Success
   '/alexa/upsert':
     post:
       tags:
@@ -298,62 +282,3 @@ paths:
           description: "API Error"
           schema: 
             $ref: "#/definitions/ApiError"
-definitions:
-  Alexa:
-    type: object
-    required:
-      - alexaId
-    properties:
-      alexaId:
-        type: string
-      domainKey:
-        type: string
-      ruleType:
-        type: string
-      ruleName:
-        type: string
-      intentName:
-        type: string
-      errorResponse:
-        type: string
-      createdBy:
-        type: string
-      registeredStamp:
-        type: integer
-        format: int64
-      updatedStamp:
-        type: integer
-        format: int64
-  ApiError: 
-    type: "object"
-    required: 
-      - "code"
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"
-  Count:
-    type: object
-    required:
-      - total
-    properties:
-      total:
-        type: integer
-        format: int64
-  IDResult:
-    type: object
-    required:
-      - id
-    properties:
-      id:
-        type: string
-  Success: 
-    type: "object"
-    required:
-      - code
-    properties: 
-      code: 
-        type: "string"
-      message: 
-        type: "string"
