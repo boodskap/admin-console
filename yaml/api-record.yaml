@@ -44,7 +44,7 @@ paths:
         - name: dkey
           in: query
           description: Another Domain Key, optional (admin access)
-          required: true
+          required: false
           type: string
         - name: data
           in: body
@@ -78,7 +78,7 @@ paths:
           required: true
           type: string
         - name: atoken
-          in: path
+          in: query
           description: Auth token of the logged in user
           required: true
           type: string
@@ -129,7 +129,7 @@ paths:
           required: true
           type: string
         - name: atoken
-          in: path
+          in: query
           description: Auth token of the logged in user
           required: true
           type: string
@@ -185,7 +185,7 @@ paths:
           required: true
           type: string
         - name: atoken
-          in: path
+          in: query
           description: Auth token of the logged in user
           required: true
           type: string
@@ -220,7 +220,7 @@ paths:
           required: true
           type: string
         - name: atoken
-          in: path
+          in: query
           description: Auth token of the logged in user
           required: true
           type: string
@@ -255,7 +255,7 @@ paths:
           required: true
           type: string
         - name: atoken
-          in: path
+          in: query
           description: Auth token of the logged in user
           required: true
           type: string
@@ -309,7 +309,7 @@ paths:
           required: true
           type: string
         - name: atoken
-          in: path
+          in: query
           description: Auth token of the logged in user
           required: true
           type: string
@@ -344,7 +344,7 @@ paths:
           required: true
           type: string
         - name: atoken
-          in: path
+          in: query
           description: Auth token of the logged in user
           required: true
           type: string
